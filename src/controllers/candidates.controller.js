@@ -142,7 +142,10 @@ export const getWinner = async (req = request, res = response) => {
       message: winners.length > 1 ? "Seri!" : "Pemenang Ditemukan",
       data: winners.map(winner => ({
         name: winner.name,
-        votes: winner.votes.length
+        votes: winner.votes.length,
+        divisi: winner.divisi,
+        image: winner.image,
+        percentage: ((winner.votes.length / allCandidates.reduce((sum, candidate) => sum + candidate.votes.length, 0)) * 100).toFixed(1)
       }))
     });
 
