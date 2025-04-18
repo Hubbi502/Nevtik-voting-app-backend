@@ -19,9 +19,22 @@ uploadDirs.forEach(dir => {
 
 const app = express();
 
+
+const allowedOrigins = [
+  process.env.DEV_FRONTEND_URL,
+  process.env.DEPLOY_FRONTEND_URL
+];
+
 // CORS configuration
 app.use(cors({
-  origin: 'http://localhost:3000', // Your frontend URL
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  }, // Your frontend URL
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true // Important for cookies
