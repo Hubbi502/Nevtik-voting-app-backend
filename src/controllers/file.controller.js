@@ -29,7 +29,7 @@ export const listFiles = (req = request, res = response) => {
 
     const fileList = files.map(file => ({
       filename: file,
-      url: `http://localhost:5000/candidates/img/${file}`
+      url: process.env.BACKEND_URL+`/candidates/img/${file}`
     }));
 
     res.json(fileList);
@@ -42,7 +42,7 @@ export const uploadImage = async (req = request, res = response) => {
   }
 
   const { id } = req.params;
-  const imageUrl = `http://localhost:5000/candidates/img/${req.file.filename}`;
+  const imageUrl = process.env.BACKEND_URL+`/candidates/img/${req.file.filename}`;
 
   try {
     const updatedCandidate = await prisma.candidate.update({
