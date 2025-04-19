@@ -52,7 +52,7 @@ export const login = async (req = request, res = response)=>{
 
 }
 
-export const register = async (req = request, res = response)=>{
+export const addUser = async (req = request, res = response)=>{
   const {name, password, email, divisi, role} = req.body;
 
   // hash password
@@ -151,5 +151,28 @@ export const logoutUser = async (req = request, res = response) => {
   res.status(200).json({
     message: "Logout successful",
   });
+};
+
+
+export const deleteUser = async (req = request, res = response) => {
+  const { id } = req.body;
+
+  try {
+    const user = await prisma.user.delete({
+      where: {
+        id: parseInt(id),
+      },
+    });
+
+    res.status(200).json({
+      message: "success",
+      data: user,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Error deleting user",
+      error: error.message,
+    });
+  }
 };
 

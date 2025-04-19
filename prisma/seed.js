@@ -59,7 +59,7 @@ async function main() {
         kelas: "XI",
         jurusan: "RPL",
         image:
-          "http://localhost:5000/candidates/img/1744114390981-261691042.jpg",
+          `http://${process.env.BACKEND_URL}/img/1744114390981-261691042.jpg`,
       },
     }),
     prisma.candidate.create({
@@ -81,7 +81,7 @@ async function main() {
         kelas: "XI",
         jurusan: "RPL",
         image:
-          "http://localhost:5000/candidates/img/1744114173725-798079446.jpg",
+          `http://${process.env.BACKEND_URL}/candidates/img/1744114173725-798079446.jpg`,
       },
     }),
     prisma.candidate.create({
@@ -99,7 +99,7 @@ async function main() {
         kelas: "XI",
         jurusan: "RPL",
         image:
-          "http://localhost:5000/candidates/img/1744114422507-336692499.jpg",
+          `http://${process.env.BACKEND_URL}/candidates/img/1744114422507-336692499.jpg`,
       },
     }),
   ]);

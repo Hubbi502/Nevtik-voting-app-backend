@@ -1,4 +1,4 @@
-import { loginSchema, registerSchema } from "../validation/userSchema.js";
+import { loginSchema, addUserSchema } from "../validation/userSchema.js";
 import { request, response } from "express";
 import { verifyToken } from "../libs/jwt.js";
 import prisma from "../utils/prisma.js";
@@ -33,7 +33,7 @@ export const isLoginValid = async (req = request, res = response, next)=>{
   next();
 }
 
-export const isRegisterValid = async (req = request, res = response, next)=>{
+export const isAddUserValid = async (req = request, res = response, next)=>{
   const {name, password, email, divisi, role} = req.body;
   
     // cek data yang dikirimkan
@@ -44,7 +44,7 @@ export const isRegisterValid = async (req = request, res = response, next)=>{
     }
   
     // validasi data
-    const isDataValid = await registerSchema.safeParseAsync({
+    const isDataValid = await addUserSchema.safeParseAsync({
       name:name, 
       password:password, 
       email:email,
@@ -91,15 +91,21 @@ export const isAuthorized = async (req, res, next) => {
         return res.status(401).json({ message: "Invalid token" });
       }
 
-      if (decoded.userId.role !== "ADMIN"){
-        return res.status(401).json({ message: "Unauthorized" });
-      }
-
       req.user = decoded;
       next();
       break;
   }
 };
+
+export const isAdmin = async (req, res, next) => {
+  const token = req.cookies.token;
+  const decoded = verifyToken(token);
+        if (decoded.userId.role !== "ADMIN"){
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+      next();
+}
+
 
 export const isDataValid = async (req, res, next) => {
   const { filename } = req.params;
@@ -120,7 +126,7 @@ export const isDataValid = async (req, res, next) => {
         return res.status(400).json({ message: "Invalid : missing data" });
       }
 
-      const isValid = await registerSchema.safeParseAsync({
+      const isValid = await addUserSchema.safeParseAsync({
         name: name,
         password: password,
         email: email,
