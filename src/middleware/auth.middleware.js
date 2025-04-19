@@ -106,7 +106,6 @@ export const isAdmin = async (req, res, next) => {
       next();
 }
 
-
 export const isDataValid = async (req, res, next) => {
   const { filename } = req.params;
 
