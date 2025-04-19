@@ -160,7 +160,7 @@ export const deleteUser = async (req = request, res = response) => {
   try {
     const user = await prisma.user.delete({
       where: {
-        id: parseInt(id),
+        id: id,
       },
     });
 
