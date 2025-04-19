@@ -139,10 +139,13 @@ export const getWinner = async (req = request, res = response) => {
     let winners = allCandidates.filter(candidate => candidate.votes.length === maxVotes);
 
     res.status(200).json({
-      message: winners.length > 1 ? "Seri!" : "Pemenang Ditemukan",
+      message: winners.length > 1 ? "draw" : "success",
       data: winners.map(winner => ({
         name: winner.name,
-        votes: winner.votes.length
+        votes: winner.votes.length,
+        image: winner.image,
+        divisi: winner.divisi,
+        percentage: ((winner.votes.length / allCandidates.reduce((sum, candidate) => sum + candidate.votes.length, 0)) * 100).toFixed(2)
       }))
     });
 
