@@ -52,7 +52,7 @@ export const login = async (req = request, res = response)=>{
 
 }
 
-export const register = async (req = request, res = response)=>{
+export const addUser = async (req = request, res = response)=>{
   const {name, password, email, divisi, role} = req.body;
 
   // hash password
