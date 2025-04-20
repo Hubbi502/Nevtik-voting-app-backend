@@ -87,7 +87,40 @@ export const getUsers = async (req = request, res = response) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 6;
     const skip = (page - 1) * limit;
+
+    const { divisi = "all", statusVote = "all" } = req.query;
+
+    const allowedDivisi = ["Web Development", "ITNSA", "Cyber Security"];
+    const allowedStatusVote = ["voted", "not-voted", "all"];
+
+    let filter = {};
+
+    // Validasi dan set filter divisi
+    if (divisi !== "all") {
+      if (!allowedDivisi.includes(divisi)) {
+        return res.status(400).json({
+          message: "Invalid 'divisi' value. Allowed: Web Development, ITNSA, Cyber Security, or all",
+        });
+      }
+      filter.divisi = divisi;
+    }
+
+    // Validasi dan set filter statusVote
+    if (statusVote !== "all") {
+      if (!["voted", "not-voted"].includes(statusVote)) {
+        return res.status(400).json({
+          message: "Invalid 'statusVote' value. Allowed: voted, not-voted, or all",
+        });
+      }
+
+      filter.vote =
+        statusVote === "voted"
+          ? { isNot: null }
+          : { is: null };
+    }
+
     const users = await prisma.user.findMany({
+      where: filter,
       skip,
       take: limit,
       select: {
@@ -95,12 +128,11 @@ export const getUsers = async (req = request, res = response) => {
         email: true,
         name: true,
         divisi: true,
-        vote: true
-      }
+        vote: true,
+      },
     });
-    
 
-    const total = await prisma.user.count();
+    const total = await prisma.user.count({ where: filter });
     const totalPages = Math.ceil(total / limit);
 
     res.status(200).json({
@@ -108,16 +140,23 @@ export const getUsers = async (req = request, res = response) => {
       data: users,
       total,
       currentPage: page,
-      totalPages
+      totalPages,
     });
   } catch (error) {
-    console.error('Error fetching users:', error);
-    res.status(500).json({ 
-      message: "Error fetching users",
-      error: error.message 
+    console.error("🔥 Error fetching users:", {
+      message: error.message,
+      stack: error.stack,
+    });
+
+    res.status(500).json({
+      message: "Internal server error while fetching users",
+      error: error.message,
     });
   }
 };
+
+
+
 
 export const getSpecificUser = async (req = request, res = response)=>{
   const {email} = req.params;
