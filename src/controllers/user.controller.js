@@ -107,7 +107,7 @@ export const getUsers = async (req = request, res = response) => {
 
     // Validasi dan set filter statusVote
     if (statusVote !== "all") {
-      if (!["voted", "not-voted"].includes(statusVote)) {
+      if (!allowedStatusVote.includes(statusVote)) {
         return res.status(400).json({
           message: "Invalid 'statusVote' value. Allowed: voted, not-voted, or all",
         });
