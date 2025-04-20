@@ -91,7 +91,7 @@ export const getUsers = async (req = request, res = response) => {
     const { divisi = "all", statusVote = "all" } = req.query;
 
     const allowedDivisi = ["Web Development", "ITNSA", "Cyber Security"];
-    const allowedStatusVote = ["voted", "not-voted", "all"];
+    const allowedStatusVote = ["Vote", "Not Vote", "all"];
 
     let filter = {};
 
@@ -107,14 +107,14 @@ export const getUsers = async (req = request, res = response) => {
 
     // Validasi dan set filter statusVote
     if (statusVote !== "all") {
-      if (!allowedStatusVote.includes(statusVote)) {
+      if (!["Vote", "Not Vote"].includes(statusVote)) {
         return res.status(400).json({
-          message: "Invalid 'statusVote' value. Allowed: voted, not-voted, or all",
+          message: "Invalid 'statusVote' value. Allowed: Vote, Not Vote, or all",
         });
       }
 
       filter.vote =
-        statusVote === "voted"
+        statusVote === "Vote"
           ? { isNot: null }
           : { is: null };
     }
@@ -154,6 +154,7 @@ export const getUsers = async (req = request, res = response) => {
     });
   }
 };
+
 
 
 
