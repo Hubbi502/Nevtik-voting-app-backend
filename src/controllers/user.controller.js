@@ -91,11 +91,15 @@ export const getUsers = async (req = request, res = response) => {
     const users = await prisma.user.findMany({
       skip,
       take: limit,
+      include: {
+        vote: true,
+      },
       select: {
         id: true,
         email: true,
         name: true,
-        divisi: true
+        divisi: true,
+        vote: true
       }
     });
 

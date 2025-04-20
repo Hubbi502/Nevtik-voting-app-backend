@@ -5,7 +5,7 @@ import { isAuthorized, isDataValid, isLoginValid, isAddUserValid, isAdmin } from
 import { upload } from "../utils/multer.js";
 
 const router = Router();
-router.get("/users", isAuthorized, getUsers);
+router.get("/users", isAuthorized,isAdmin, getUsers);
 router.get("/users/:email",isAuthorized, getSpecificUser);
 router.get("/user",isAuthorized, getCurrentUser)
 router.post("/login",isLoginValid, login);
