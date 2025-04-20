@@ -95,12 +95,7 @@ export const getUsers = async (req = request, res = response) => {
         email: true,
         name: true,
         divisi: true,
-        vote: {
-          select: {
-            id: true, // ambil field yang lu mau dari vote
-            pilihan: true
-          }
-        }
+        vote: true
       }
     });
     
