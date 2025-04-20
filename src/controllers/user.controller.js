@@ -87,21 +87,23 @@ export const getUsers = async (req = request, res = response) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 6;
     const skip = (page - 1) * limit;
-
     const users = await prisma.user.findMany({
       skip,
       take: limit,
-      include: {
-        vote: true,
-      },
       select: {
         id: true,
         email: true,
         name: true,
         divisi: true,
-        vote: true
+        vote: {
+          select: {
+            id: true, // ambil field yang lu mau dari vote
+            pilihan: true
+          }
+        }
       }
     });
+    
 
     const total = await prisma.user.count();
     const totalPages = Math.ceil(total / limit);
