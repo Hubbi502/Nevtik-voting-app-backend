@@ -100,6 +100,7 @@ export const getUsers = async (req = request, res = response) => {
       if (!allowedDivisi.includes(divisi)) {
         return res.status(400).json({
           message: "Invalid 'divisi' value. Allowed: Web Development, ITNSA, Cyber Security, or all",
+          divisi
         });
       }
       filter.divisi = divisi;
@@ -110,6 +111,7 @@ export const getUsers = async (req = request, res = response) => {
       if (!["Vote", "Not Vote"].includes(statusVote)) {
         return res.status(400).json({
           message: "Invalid 'statusVote' value. Allowed: Vote, Not Vote, or all",
+          statusVote
         });
       }
 
