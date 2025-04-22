@@ -219,3 +219,46 @@ export const deleteUser = async (req = request, res = response) => {
   }
 };
 
+export const updateUser = async (req = request, res = response) => {
+  const { id } = req.params;
+  const { name, email, divisi, password } = req.body;
+
+  try {
+    // Ambil user lama dulu
+    const existingUser = await prisma.user.findUnique({
+      where: { id },
+    });
+
+    if (!existingUser) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
+
+    // Hash password baru kalau ada, kalo nggak, pakai password lama
+    const hashedPassword = password
+      ? await hash(password, 12)
+      : existingUser.password;
+
+    const user = await prisma.user.update({
+      where: { id },
+      data: {
+        name: name || existingUser.name,
+        email: email || existingUser.email,
+        divisi: divisi || existingUser.divisi,
+        password: hashedPassword,
+      },
+    });
+
+    res.status(200).json({
+      message: "success",
+      data: user,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Error updating user",
+      error: error.message,
+    });
+  }
+};
+
