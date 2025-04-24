@@ -88,7 +88,7 @@ export const getUsers = async (req = request, res = response) => {
     const limit = parseInt(req.query.limit) || 6;
     const skip = (page - 1) * limit;
 
-    const { divisi = "all", statusVote = "all" } = req.query;
+    const { divisi = "all", statusVote = "all", search } = req.query;
 
     const allowedDivisi = ["Web Development", "ITNSA", "Cyber Security"];
     const allowedStatusVote = ["Vote", "Not Vote", "all"];
@@ -120,6 +120,10 @@ export const getUsers = async (req = request, res = response) => {
           ? { isNot: null }
           : { is: null };
     }
+
+    filter.name = {
+      contains:search
+    };
 
     const users = await prisma.user.findMany({
       where: filter,
